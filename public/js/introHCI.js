@@ -14,6 +14,12 @@ function initializePage() {
 	$('#colorBtn').click(randomizeColors);
 }
 
+function addData(data) {
+	console.log(data)
+	$("#project" + data.id).find(".details").html(data.summary)
+	$("#project" + data.id).find("img").addClass("detailsImage")
+}
+
 /*
  * Make an AJAX call to retrieve project details and add it in
  */
@@ -27,12 +33,23 @@ function addProjectDetails(e) {
 	var idNumber = projectID.substr('project'.length);
 
 	console.log("User clicked on project " + idNumber);
+	var data = $.get("/project/" + idNumber, addData)
+	
 }
 
+function setColors (data) {
+	var colors = data.colors.hex
+	$('body').css('background-color', colors[0]);
+	$('.thumbnail').css('background-color', colors[1]);
+	$('h1, h2, h3, h4, h5, h5').css('color', colors[2]);
+	$('p').css('color', colors[3]);
+	$('.project img').css('opacity', .75);
+}
 /*
  * Make an AJAX call to retrieve a color palette for the site
  * and apply it
  */
 function randomizeColors(e) {
 	console.log("User clicked on color button");
+	$.get("/palette", setColors)
 }
